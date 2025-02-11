@@ -1,0 +1,24 @@
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/issuer: letsencrypt-prod  # Use the ClusterIssuer for SSL
+spec:
+  ingressClassName: nginx
+  tls:
+  - secretName: nginx-ingress-tls  # The secret to store the TLS cert
+    hosts:
+    - kubeapp.smartnoticeboard.io  # Replace with your domain
+  rules:
+  - host: kubeapp.smartnoticeboard.io  # Replace with your domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service  # Replace with your service name
+            port:
+              number: 80
